@@ -30,7 +30,11 @@ class WP_Book_Activator {
 	 * @since    1.0.0
 	 */
 	public static function activate() {
+		require_once dirname( plugin_dir_path( __FILE__ ) ) . '/admin/class-wp-book-admin.php';
+		$wp_book = new WP_Book_Admin( 'wp-book', WP_BOOK_VERSION );
+		$wp_book->register_custom_post_type();
 
+		flush_rewrite_rules();
 	}
 
 }
