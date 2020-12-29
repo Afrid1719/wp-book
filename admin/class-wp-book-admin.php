@@ -107,7 +107,7 @@ class WP_Book_Admin {
 	 *
 	 * @since     1.0.0
 	 */
-	public function register_custom_post_type() {
+	public function register_book_post_type() {
 		$labels = array(
 			'name'               => __( 'WP Books', 'wp-book' ),
 			'singular_name'      => __( 'WP Book', 'wp-book' ),
