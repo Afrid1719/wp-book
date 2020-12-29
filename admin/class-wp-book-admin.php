@@ -137,7 +137,7 @@ class WP_Book_Admin {
 			'show_in_nav_menus'   => false,
 			'capability_type'     => 'post',
 			'has_archive'         => __( 'cpt-wp-books', 'wp_book' ),
-			'taxonomies'          => array( 'book-category' ),
+			'taxonomies'          => array( 'book-category', 'book-tag' ),
 			'rewrite'             => array( 'slug' => 'cpt-wp-book' ),
 			'query_var'           => 'cpt_wp_book',
 		);
@@ -183,5 +183,35 @@ class WP_Book_Admin {
 			'rewrite'           => array( 'slug' => 'book-category' ),
 		);
 		register_taxonomy( 'book-category', array( 'cpt_wp_book' ), $args );
+	}
+
+	public function register_book_tag_taxonomy() {
+		$labels = array(
+			'name'              => _x( 'Book Tags', 'taxonomy general name', 'wp_book' ),
+			'singular_name'     => _x( 'Book Tag', 'taxonomy singular name', 'wp_book' ),
+			'search_items'      => __( 'Search Book Tags', 'wp_book' ),
+			'popular_items'=> __('Book Tags', 'wp_book'),
+			'all_items'         => __( 'All Book Tags', 'wp_book' ),
+			'edit_item'         => __( 'Edit Book Tag', 'wp_book' ),
+			'view_item'         => __( 'View Book Tag', 'wp_book' ),
+			'update_item'       => __( 'Update Book Tag', 'wp_book' ),
+			'add_new_item'      => __( 'Add New Book Tag', 'wp_book' ),
+			'new_item_name'     => __( 'New Book Tag', 'wp_book' ),
+			'separate_items_with_commas'=> __('Separate book tags with commas', 'wp_book'),
+			//add or remove items
+			//choose from most used
+			'menu_name'         => __( 'Book Tags', 'wp_book' ),
+			'not_found'         => __( 'No book tags found', 'wp_book' ),
+			'no_terms'          => __( 'No book tags', 'wp_book' ),
+		);
+		$args   = array(
+			'hierarchical'      => false,
+			'labels'            => $labels,
+			'show_ui'           => true,
+			'show_admin_column' => true,
+			'query_var'         => true,
+			'rewrite'           => array( 'slug' => 'book-tag' ),
+		);
+		register_taxonomy( 'book-tag', array( 'cpt_wp_book' ), $args );
 	}
 }
