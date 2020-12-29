@@ -137,6 +137,7 @@ class WP_Book_Admin {
 			'show_in_nav_menus'   => false,
 			'capability_type'     => 'post',
 			'has_archive'         => __( 'cpt-wp-books', 'wp_book' ),
+			'taxonomies'          => array( 'book-category' ),
 			'rewrite'             => array( 'slug' => 'cpt-wp-book' ),
 			'query_var'           => 'cpt_wp_book',
 		);
@@ -144,15 +145,43 @@ class WP_Book_Admin {
 		register_post_type( 'cpt_wp_book', $args );
 	}
 
-//	public function sync_custom_posts($query) {
-//
-//		if (is_home() && $query->is_main_query()) {
-////			$existing_post_types = $query->get('post_type');
-////			$existing_post_types[] = 'cpt_wp_book';
-//
-//			$query->set('post_type', ['post', 'cpt_wp_book', 'page']);
-//		}
-//
-//		return $query;
-//	}
+	// public function sync_custom_posts($query) {
+	//
+	// if (is_home() && $query->is_main_query()) {
+	// $existing_post_types = $query->get('post_type');
+	// $existing_post_types[] = 'cpt_wp_book';
+	//
+	// $query->set('post_type', ['post', 'cpt_wp_book', 'page']);
+	// }
+	//
+	// return $query;
+	// }
+
+	public function register_book_category_taxonomy() {
+		$labels = array(
+			'name'              => _x( 'Book Categories', 'taxonomy general name', 'wp_book' ),
+			'singular_name'     => _x( 'Book Category', 'taxonomy singular name', 'wp_book' ),
+			'search_items'      => __( 'Search Book Categories', 'wp_book' ),
+			'all_items'         => __( 'All Book Categories', 'wp_book' ),
+			'parent_item'       => __( 'Parent Book Category', 'wp_book' ),
+			'parent_item_colon' => __( 'Parent Book Category:', 'wp_book' ),
+			'edit_item'         => __( 'Edit Book Category', 'wp_book' ),
+			'view_item'         => __( 'View Book Category', 'wp_book' ),
+			'update_item'       => __( 'Update Book Category', 'wp_book' ),
+			'add_new_item'      => __( 'Add New Book Category', 'wp_book' ),
+			'new_item_name'     => __( 'New Book Category', 'wp_book' ),
+			'menu_name'         => __( 'Book Categories', 'wp_book' ),
+			'not_found'         => __( 'No book categories found', 'wp_book' ),
+			'no_terms'          => __( 'No book categories', 'wp_book' ),
+		);
+		$args   = array(
+			'hierarchical'      => true,
+			'labels'            => $labels,
+			'show_ui'           => true,
+			'show_admin_column' => true,
+			'query_var'         => true,
+			'rewrite'           => array( 'slug' => 'book-category' ),
+		);
+		register_taxonomy( 'book-category', array( 'cpt_wp_book' ), $args );
+	}
 }
