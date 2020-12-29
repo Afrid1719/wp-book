@@ -159,6 +159,7 @@ class WP_Book {
 		$this->loader->add_action( 'init', $plugin_admin, 'register_custom_post_type' );
 //		$this->loader->add_action('pre_get_posts', $plugin_admin, 'sync_custom_posts');
 		$this->loader->add_action('init', $plugin_admin, 'register_book_category_taxonomy');
+		$this->loader->add_action('init', $plugin_admin, 'register_book_tag_taxonomy');
 	}
 
 	/**
