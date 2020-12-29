@@ -214,4 +214,66 @@ class WP_Book_Admin {
 		);
 		register_taxonomy( 'book-tag', array( 'cpt_wp_book' ), $args );
 	}
+
+	public function show_off_meta_box() {
+		add_action('add_meta_boxes', [__CLASS__, 'add_custom_meta_box']);
+	}
+
+	public static function add_custom_meta_box() {
+		add_meta_box(
+			'wb_post_meta_box',
+			'WP Books Meta',
+			[__CLASS__, 'wb_meta_box_renderer'],
+			'cpt_wp_book',
+			'side',
+			'default'
+		);
+	}
+
+	public static function wb_meta_box_renderer() {
+		$elems = [
+			'Author Name'=>'text',
+			'Price'=>'number',
+			'Publisher'=>'text',
+			'Year'=>'year',
+			'Edition'=>'text'
+		];
+
+		foreach($elems as $key => $value) :
+			if ($key === 'Year'): ?>
+				<p>
+					<label
+						for="<?php esc_attr_e('wp_book_year', 'wp_book');?>"
+					>
+						<?php printf(__('%s', 'wp_book'), $key); ?>
+					</label>
+					<input
+						type="number"
+						id="<?php esc_attr_e('wp_book_year', 'wp_book');?>"
+						name="<?php esc_attr_e('wp_book_year', 'wp_book');?>"
+						placeholder="<?php esc_attr_e('YYYY', 'wp_book') ?>"
+						min="1900"
+						max="2020"
+						value=""
+					/>
+				</p>
+			<?php
+			else : ?>
+				<p>
+					<label
+						for="<?php printf(esc_attr('%s', 'wp_book'), $key);?>"
+					>
+						<?php printf(__('%s', 'wp_book'), $key); ?>
+					</label>
+					<input
+						type="<?php printf(esc_attr('%s', 'wp_book'), $value); ?>"
+						id="<?php printf(esc_attr('%s', 'wp_book'), $key); ?>"
+						name="<?php printf(esc_attr('%s', 'wp_book'), $key)?>"
+						value=""
+					/>
+				</p>
+			<?php
+			endif;
+		endforeach;
+	}
 }
