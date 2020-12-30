@@ -34,6 +34,9 @@ class WP_Book_Activator {
 		$wp_book = new WP_Book_Admin( 'wp-book', WP_BOOK_VERSION );
 		$wp_book->register_book_post_type();
 
+		require_once dirname( plugin_dir_path( __FILE__ ) ) . '/includes/class-wp-book-meta.php';
+		WP_Book_Meta::wp_bookmeta_install();
+
 		flush_rewrite_rules();
 	}
 

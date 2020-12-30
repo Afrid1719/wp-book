@@ -122,6 +122,8 @@ class WP_Book {
 		 */
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'public/class-wp-book-public.php';
 
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-wp-book-meta.php';
+
 		$this->loader = new WP_Book_Loader();
 
 	}
@@ -153,6 +155,7 @@ class WP_Book {
 	private function define_admin_hooks() {
 
 		$plugin_admin = new WP_Book_Admin( $this->get_wp_book(), $this->get_version() );
+		$book_meta = new WP_Book_Meta();
 
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_styles' );
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts' );
@@ -162,6 +165,7 @@ class WP_Book {
 		$this->loader->add_action('init', $plugin_admin, 'register_book_tag_taxonomy');
 		$this->loader->add_action('load-post.php', $plugin_admin, 'show_off_meta_box');
 		$this->loader->add_action('load-post-new.php', $plugin_admin, 'show_off_meta_box');
+		$this->loader->add_action('init', $book_meta, 'wp_bookmeta_integrate', 0);
 	}
 
 	/**
