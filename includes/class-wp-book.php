@@ -160,6 +160,8 @@ class WP_Book {
 //		$this->loader->add_action('pre_get_posts', $plugin_admin, 'sync_custom_posts');
 		$this->loader->add_action('init', $plugin_admin, 'register_book_category_taxonomy');
 		$this->loader->add_action('init', $plugin_admin, 'register_book_tag_taxonomy');
+		$this->loader->add_action('load-post.php', $plugin_admin, 'show_off_meta_box');
+		$this->loader->add_action('load-post-new.php', $plugin_admin, 'show_off_meta_box');
 	}
 
 	/**
