@@ -345,21 +345,20 @@ class WP_Book_Admin {
 				'Edition',
 				'URL',
 			);
-		}
 
-		/**
-		 * Stores input array length
-		 * 
-		 * @var   int $input_arr_length
-		 */
-		$input_arr_length = count( $inputs );
-		for ( $i = 0; $i < $input_arr_length; $i++ ) {
-			if ( ! empty( $_POST[ $inputs[ $i ] ] ) ) {
-				$this->bookmeta->update_book_meta( $post_id, sanitize_key( "$inputs[$i]" ), sanitize_text_field( $_POST[ $inputs[ $i ] ] ) );
-			} else {
-				$this->bookmeta->delete_book_meta( $post_id, sanitize_key( "$inputs[$i]" ) );
+			/**
+			 * Stores input array length
+			 *
+			 * @var   int $input_arr_length
+			 */
+			$input_arr_length = count( $inputs );
+			for ( $i = 0; $i < $input_arr_length; $i++ ) {
+				if ( ! empty( $_POST[ $inputs[ $i ] ] ) ) {
+					$this->bookmeta->update_book_meta( $post_id, sanitize_key( "$inputs[$i]" ), sanitize_text_field( $_POST[ $inputs[ $i ] ] ) );
+				} else {
+					$this->bookmeta->delete_book_meta( $post_id, sanitize_key( "$inputs[$i]" ) );
+				}
 			}
-		}
 
 	}
 }
