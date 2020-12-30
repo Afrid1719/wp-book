@@ -361,4 +361,8 @@ class WP_Book_Admin {
 			}
 
 	}
+
+	public function wp_book_register_custom_dashboard_widget() {
+        register_widget('WP_Custom_Dashboard_Widget');
+	}
 }
