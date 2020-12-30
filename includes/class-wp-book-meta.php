@@ -13,17 +13,17 @@ class WP_Book_Meta {
 
 		$max_index_length = 191;
 
-		$install_query = "CREATE TABLE $table_name (
+		$sql = "CREATE TABLE $table_name (
 		meta_id bigint(20) unsigned NOT NULL auto_increment,
 		book_id bigint(20) unsigned NOT NULL default '0',
 		meta_key varchar(255) default NULL,
 		meta_value longtext,
 		PRIMARY KEY  (meta_id),
-		KEY badge (book_id),
+		KEY book (book_id),
 		KEY meta_key (meta_key($max_index_length))
 	) $charset_collate;";
 
-	dbDelta( $install_query );
+	dbDelta( $sql );
 	}
 
 	public function wp_bookmeta_integrate() {

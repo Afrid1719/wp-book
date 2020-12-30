@@ -43,6 +43,14 @@ class WP_Book_Admin {
 	private $version;
 
 	/**
+	 * Reference to Book Meta object
+	 *
+	 * @access   private
+	 * @var      object    $bookmeta    The reference to wp_book_meta object
+	 */
+	private $bookmeta;
+
+	/**
 	 * Initialize the class and set its properties.
 	 *
 	 * @since    1.0.0
@@ -53,6 +61,9 @@ class WP_Book_Admin {
 
 		$this->wp_book = $wp_book;
 		$this->version = $version;
+
+		require_once dirname( dirname( __FILE__ ) ) . '/includes/class-wp-book-meta.php';
+		$this->bookmeta = new WP_Book_Meta();
 
 	}
 
@@ -105,7 +116,8 @@ class WP_Book_Admin {
 	/**
 	 * Registers a custom post type - WP Book
 	 *
-	 * @since     1.0.0
+	 * @return   void
+	 * @since    1.0.0
 	 */
 	public function register_book_post_type() {
 		$labels = array(
@@ -145,18 +157,12 @@ class WP_Book_Admin {
 		register_post_type( 'cpt_wp_book', $args );
 	}
 
-	// public function sync_custom_posts($query) {
-	//
-	// if (is_home() && $query->is_main_query()) {
-	// $existing_post_types = $query->get('post_type');
-	// $existing_post_types[] = 'cpt_wp_book';
-	//
-	// $query->set('post_type', ['post', 'cpt_wp_book', 'page']);
-	// }
-	//
-	// return $query;
-	// }
-
+	/**
+	 * Registers Book Category Taxonomy
+	 *
+	 * @return   void
+	 * @since    1.0.0
+	 */
 	public function register_book_category_taxonomy() {
 		$labels = array(
 			'name'              => _x( 'Book Categories', 'taxonomy general name', 'wp_book' ),
@@ -185,24 +191,28 @@ class WP_Book_Admin {
 		register_taxonomy( 'book-category', array( 'cpt_wp_book' ), $args );
 	}
 
+	/**
+	 * Registers Book Tag taxonomy
+	 *
+	 * @return   void
+	 * @since    1.0.0
+	 */
 	public function register_book_tag_taxonomy() {
 		$labels = array(
-			'name'              => _x( 'Book Tags', 'taxonomy general name', 'wp_book' ),
-			'singular_name'     => _x( 'Book Tag', 'taxonomy singular name', 'wp_book' ),
-			'search_items'      => __( 'Search Book Tags', 'wp_book' ),
-			'popular_items'=> __('Book Tags', 'wp_book'),
-			'all_items'         => __( 'All Book Tags', 'wp_book' ),
-			'edit_item'         => __( 'Edit Book Tag', 'wp_book' ),
-			'view_item'         => __( 'View Book Tag', 'wp_book' ),
-			'update_item'       => __( 'Update Book Tag', 'wp_book' ),
-			'add_new_item'      => __( 'Add New Book Tag', 'wp_book' ),
-			'new_item_name'     => __( 'New Book Tag', 'wp_book' ),
-			'separate_items_with_commas'=> __('Separate book tags with commas', 'wp_book'),
-			//add or remove items
-			//choose from most used
-			'menu_name'         => __( 'Book Tags', 'wp_book' ),
-			'not_found'         => __( 'No book tags found', 'wp_book' ),
-			'no_terms'          => __( 'No book tags', 'wp_book' ),
+			'name'                       => _x( 'Book Tags', 'taxonomy general name', 'wp_book' ),
+			'singular_name'              => _x( 'Book Tag', 'taxonomy singular name', 'wp_book' ),
+			'search_items'               => __( 'Search Book Tags', 'wp_book' ),
+			'popular_items'              => __( 'Book Tags', 'wp_book' ),
+			'all_items'                  => __( 'All Book Tags', 'wp_book' ),
+			'edit_item'                  => __( 'Edit Book Tag', 'wp_book' ),
+			'view_item'                  => __( 'View Book Tag', 'wp_book' ),
+			'update_item'                => __( 'Update Book Tag', 'wp_book' ),
+			'add_new_item'               => __( 'Add New Book Tag', 'wp_book' ),
+			'new_item_name'              => __( 'New Book Tag', 'wp_book' ),
+			'separate_items_with_commas' => __( 'Separate book tags with commas', 'wp_book' ),
+			'menu_name'                  => __( 'Book Tags', 'wp_book' ),
+			'not_found'                  => __( 'No book tags found', 'wp_book' ),
+			'no_terms'                   => __( 'No book tags', 'wp_book' ),
 		);
 		$args   = array(
 			'hierarchical'      => false,
@@ -215,66 +225,141 @@ class WP_Book_Admin {
 		register_taxonomy( 'book-tag', array( 'cpt_wp_book' ), $args );
 	}
 
+	/**
+	 * To add a hook to create custom meta box
+	 *
+	 * @return void
+	 */
 	public function show_off_meta_box() {
-		add_action('add_meta_boxes', [__CLASS__, 'add_custom_meta_box']);
+		add_action( 'add_meta_boxes', array( $this, 'add_custom_meta_box' ) );
 	}
 
-	public static function add_custom_meta_box() {
+	/**
+	 * Creates a custom meta box
+	 *
+	 * @return void
+	 */
+	public function add_custom_meta_box() {
 		add_meta_box(
 			'wb_post_meta_box',
 			'WP Books Meta',
-			[__CLASS__, 'wb_meta_box_renderer'],
+			array( $this, 'wb_meta_box_renderer' ),
 			'cpt_wp_book',
 			'side',
 			'default'
 		);
 	}
 
-	public static function wb_meta_box_renderer() {
-		$elems = [
-			'Author Name'=>'text',
-			'Price'=>'number',
-			'Publisher'=>'text',
-			'Year'=>'year',
-			'Edition'=>'text',
-            'URL'=>'url'
-		];
+	/**
+	 * HTML renderer of the custom meta box
+	 *
+	 * @param    [post_type] $post
+	 * @return   void
+	 */
+	public function wb_meta_box_renderer( $post ) {
+		$elems = array(
+			'Author'    => 'text',
+			'Price'     => 'number',
+			'Publisher' => 'text',
+			'Year'      => 'number',
+			'Edition'   => 'text',
+			'URL'       => 'url',
+		);
 
-		foreach($elems as $key => $value) :
-			if ($key === 'Year'): ?>
-				<p>
+		$values = array();
+		foreach ( array_keys( $elems ) as $key ) {
+			$value = $this->bookmeta->get_book_meta( $post->ID, strtolower( $key ), true );
+
+			if ( ! empty( $value ) ) {
+				$values[ $key ] = $value;
+			}
+		}
+
+		?>
+
+		<?php wp_nonce_field( basename( __FILE__ ), 'wp_bookmeta_nonce' ); ?>
+
+		<?php
+		foreach ( $elems as $key => $value ) :
+			if ( 'Year' === $key ) :
+				?>
+
 					<label
-						for="<?php esc_attr_e('wp_book_year', 'wp_book');?>"
+						for="<?php esc_attr_e( 'wp_book_year', 'wp_book' ); ?>"
 					>
-						<?php printf(__('%s', 'wp_book'), $key); ?>
+						<?php printf( __( '%s', 'wp_book' ), $key ); ?>
 					</label>
+					<br/>
 					<input
-						type="number"
-						id="<?php esc_attr_e('wp_book_year', 'wp_book');?>"
-						name="<?php esc_attr_e('wp_book_year', 'wp_book');?>"
-						placeholder="<?php esc_attr_e('YYYY', 'wp_book') ?>"
+						type="<?php printf( esc_attr( '%s', 'wp_book' ), $value ); ?>"
+						id="<?php printf( esc_attr( '%s', 'wp_book' ), $key ); ?>"
+						name="<?php printf( esc_attr( '%s', 'wp_book' ), $key ); ?>"
+						placeholder="<?php esc_attr_e( 'YYYY', 'wp_book' ); ?>"
 						min="1900"
 						max="2020"
-						value=""
+						value="<?php echo $values[ $key ] ?? ''; ?>"
 					/>
-				</p>
-			<?php
-			else : ?>
+
+				<?php
+			else :
+				?>
 				<p>
 					<label
-						for="<?php printf(esc_attr('%s', 'wp_book'), $key);?>"
+						for="<?php printf( esc_attr( '%s', 'wp_book' ), $key ); ?>"
 					>
-						<?php printf(__('%s', 'wp_book'), $key); ?>
+						<?php printf( __( '%s', 'wp_book' ), $key ); ?>
 					</label>
+					<br/>
 					<input
-						type="<?php printf(esc_attr('%s', 'wp_book'), $value); ?>"
-						id="<?php printf(esc_attr('%s', 'wp_book'), $key); ?>"
-						name="<?php printf(esc_attr('%s', 'wp_book'), $key)?>"
-						value=""
+						type="<?php printf( esc_attr( '%s', 'wp_book' ), $value ); ?>"
+						id="<?php printf( esc_attr( '%s', 'wp_book' ), $key ); ?>"
+						name="<?php printf( esc_attr( '%s', 'wp_book' ), $key ); ?>"
+						value="<?php echo $values[ $key ] ?? ''; ?>"
 					/>
 				</p>
-			<?php
+				<?php
 			endif;
 		endforeach;
+	}
+
+	/**
+	 * Saves Book Meta Information
+	 *
+	 * @param  [int] $post_id
+	 * @return mixed
+	 */
+	public function save_book_meta( $post_id ) {
+		if ( ! isset( $_POST['wp_bookmeta_nonce'] ) || ! wp_verify_nonce( $_POST['wp_bookmeta_nonce'], basename( __FILE__ ) ) ) {
+			return $post_id;
+		}
+
+		if ( 'cpt-wp-book' !== get_post( $post_id )->post_slug ) {
+			return;
+		}
+
+			$inputs = array(
+				'Author',
+				'Price',
+				'Publisher',
+				'Year',
+				'Edition',
+				'URL',
+			);
+		}
+
+		/**
+		 * Stores input array length
+		 * 
+		 * @var   int $input_arr_length
+		 */
+		$input_arr_length = count( $inputs );
+		for ( $i = 0; $i < $input_arr_length; $i++ ) {
+			if ( ! empty( $_POST[ $inputs[ $i ] ] ) ) {
+				$this->bookmeta->update_book_meta( $post_id, sanitize_key( "$inputs[$i]" ), sanitize_text_field( $_POST[ $inputs[ $i ] ] ) );
+			} else {
+				$this->bookmeta->delete_book_meta( $post_id, sanitize_key( "$inputs[$i]" ) );
+			}
+		}
+
 	}
 }

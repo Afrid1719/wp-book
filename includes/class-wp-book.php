@@ -166,6 +166,7 @@ class WP_Book {
 		$this->loader->add_action('load-post.php', $plugin_admin, 'show_off_meta_box');
 		$this->loader->add_action('load-post-new.php', $plugin_admin, 'show_off_meta_box');
 		$this->loader->add_action('init', $book_meta, 'wp_bookmeta_integrate', 0);
+		$this->loader->add_action('save_post', $plugin_admin, 'save_book_meta');
 	}
 
 	/**
