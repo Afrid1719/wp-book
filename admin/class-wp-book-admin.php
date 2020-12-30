@@ -236,7 +236,8 @@ class WP_Book_Admin {
 			'Price'=>'number',
 			'Publisher'=>'text',
 			'Year'=>'year',
-			'Edition'=>'text'
+			'Edition'=>'text',
+            'URL'=>'url'
 		];
 
 		foreach($elems as $key => $value) :
