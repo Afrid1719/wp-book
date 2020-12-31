@@ -381,20 +381,16 @@ class WP_Book_Admin {
 	 * @return void
 	 */
 	public function wp_custom_dashboard_renderer() {
-		$args2 = array(
+		$args = array(
 			'taxonomy'   => 'book-category',
+			'title_li'   => '',
 			'orderby'    => 'count',
 			'order'      => 'DESC',
 			'hide_empty' => false,
 			'number'     => 5,
-			'fields'     => 'names',
+			'show_count' => 1,
+			'style'      => 'p',
 		);
-
-		$book_category_list = get_terms( $args2 );
-		_e( '<ul style="list-style: none;">', 'wp_book' );
-		foreach ( $book_category_list as $item ) {
-			echo "<li>$item</li>";
-		}
-		_e( '</ul>', 'wp_book' );
+		wp_list_categories( $args );
 	}
 }
