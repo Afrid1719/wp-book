@@ -100,4 +100,50 @@ class WP_Book_Public {
 
 	}
 
+	/**
+	 * Register [wpbook] shortcode
+	 *
+	 * @return void
+	 */
+	public function wp_book_register_shortcode() {
+		add_shortcode( 'wpbook', array( $this, 'wp_book_shortcode_handler' ) );
+	}
+
+	/**
+	 * Shortcode callback
+	 *
+	 * @param   [mixed] $atts Holds the attributes of the shortcode.
+	 * @return  mixed
+	 */
+	public function wp_book_shortcode_handler( $atts ) {
+		$default_atts = array(
+			'id'          => '',
+			'author_name' => '',
+			'year'        => '',
+			'category'    => '',
+			'tag'         => '',
+			'publisher'   => '',
+		);
+
+		$atts = shortcode_atts( $default_atts, $atts );
+		$args = array_filter( $atts );
+
+		$val = $this->get_data( $args );
+		var_dump( $val );
+		return $args['id'];
+	}
+
+	/**
+	 * Fetch data from the WP Book Meta
+	 *
+	 * @param   [array] $args Attributes array from shortcode handler.
+	 * @return  mixed
+	 */
+	public function get_data( $args ) {
+		require_once dirname( dirname( __FILE__ ) ) . '/includes/class-wp-book-meta.php';
+
+		$book_meta = new WP_Book_Meta();
+
+		return $book_meta->get_book_meta( $args['id'] );
+	}
 }
