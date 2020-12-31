@@ -332,8 +332,8 @@ class WP_Book_Admin {
 		if ( ! isset( $_POST['wp_bookmeta_nonce'] ) || ! wp_verify_nonce( $_POST['wp_bookmeta_nonce'], basename( __FILE__ ) ) ) {
 			return $post_id;
 		}
-
-		if ( 'cpt-wp-book' !== get_post( $post_id )->post_type ) {
+		
+		if ( 'cpt_wp_book' !== get_post( $post_id )->post_type ) {
 			return;
 		}
 
