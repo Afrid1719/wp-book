@@ -333,7 +333,7 @@ class WP_Book_Admin {
 			return $post_id;
 		}
 
-		if ( 'cpt-wp-book' !== get_post( $post_id )->post_slug ) {
+		if ( 'cpt-wp-book' !== get_post( $post_id )->post_type ) {
 			return;
 		}
 
