@@ -337,32 +337,64 @@ class WP_Book_Admin {
 			return;
 		}
 
-			$inputs = array(
-				'Author',
-				'Price',
-				'Publisher',
-				'Year',
-				'Edition',
-				'URL',
-			);
+		$inputs = array(
+			'Author',
+			'Price',
+			'Publisher',
+			'Year',
+			'Edition',
+			'URL',
+		);
 
-			/**
-			 * Stores input array length
-			 *
-			 * @var   int $input_arr_length
-			 */
-			$input_arr_length = count( $inputs );
-			for ( $i = 0; $i < $input_arr_length; $i++ ) {
-				if ( ! empty( $_POST[ $inputs[ $i ] ] ) ) {
-					$this->bookmeta->update_book_meta( $post_id, sanitize_key( "$inputs[$i]" ), sanitize_text_field( $_POST[ $inputs[ $i ] ] ) );
-				} else {
-					$this->bookmeta->delete_book_meta( $post_id, sanitize_key( "$inputs[$i]" ) );
-				}
+		/**
+		 * Stores input array length
+		 *
+		 * @var   int $input_arr_length
+		 */
+		$input_arr_length = count( $inputs );
+		for ( $i = 0; $i < $input_arr_length; $i++ ) {
+			if ( ! empty( $_POST[ $inputs[ $i ] ] ) ) {
+				$this->bookmeta->update_book_meta( $post_id, sanitize_key( "$inputs[$i]" ), sanitize_text_field( $_POST[ $inputs[ $i ] ] ) );
+			} else {
+				$this->bookmeta->delete_book_meta( $post_id, sanitize_key( "$inputs[$i]" ) );
 			}
+		}
 
 	}
 
+	/**
+	 * Register a custom dashboard widget
+	 *
+	 * @return void
+	 */
 	public function wp_book_register_custom_dashboard_widget() {
-        register_widget('WP_Custom_Dashboard_Widget');
+		wp_add_dashboard_widget(
+			'wp-custom-widget',
+			'Top 5 Books Categories',
+			array( $this, 'wp_custom_dashboard_renderer' ),
+		);
+	}
+
+	/**
+	 * Custom Dashboard Widget to show top 5 book categories
+	 *
+	 * @return void
+	 */
+	public function wp_custom_dashboard_renderer() {
+		$args2 = array(
+			'taxonomy'   => 'book-category',
+			'orderby'    => 'count',
+			'order'      => 'DESC',
+			'hide_empty' => false,
+			'number'     => 5,
+			'fields'     => 'names',
+		);
+
+		$book_category_list = get_terms( $args2 );
+		_e( '<ul style="list-style: none;">', 'wp_book' );
+		foreach ( $book_category_list as $item ) {
+			echo "<li>$item</li>";
+		}
+		_e( '</ul>', 'wp_book' );
 	}
 }
