@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Provide a admin area view for the plugin
  *
@@ -11,6 +10,14 @@
  * @package    WP_Book
  * @subpackage WP_Book/admin/partials
  */
+
 ?>
 
-<!-- This file should primarily consist of HTML with a little bit of PHP. -->
+<!-- This renders the form in the WP Book Admin Menu -->
+<h1>WP Book Settings</h1>
+<?php settings_errors(); ?>
+<form action="options.php" method="POST">
+	<?php settings_fields( 'wp-book-admin-settings-group' ); ?>
+	<?php do_settings_sections( 'wp-book-admin-settings' ); ?>
+	<?php submit_button(); ?>
+</form>

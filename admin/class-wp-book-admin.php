@@ -291,9 +291,9 @@ class WP_Book_Admin {
 					</label>
 					<br/>
 					<input
-						type="<?php printf( esc_attr( '%s', 'wp_book' ), $value ); ?>"
-						id="<?php printf( esc_attr( '%s', 'wp_book' ), $key ); ?>"
-						name="<?php printf( esc_attr( '%s', 'wp_book' ), $key ); ?>"
+						type="<?php printf( esc_attr__( '%s', 'wp_book' ), $value ); ?>"
+						id="<?php printf( esc_attr__( '%s', 'wp_book' ), $key ); ?>"
+						name="<?php printf( esc_attr__( '%s', 'wp_book' ), $key ); ?>"
 						placeholder="<?php esc_attr_e( 'YYYY', 'wp_book' ); ?>"
 						min="1900"
 						max="2020"
@@ -305,15 +305,15 @@ class WP_Book_Admin {
 				?>
 				<p>
 					<label
-						for="<?php printf( esc_attr( '%s', 'wp_book' ), $key ); ?>"
+						for="<?php printf( esc_attr__( '%s', 'wp_book' ), $key ); ?>"
 					>
 						<?php printf( __( '%s', 'wp_book' ), $key ); ?>
 					</label>
 					<br/>
 					<input
-						type="<?php printf( esc_attr( '%s', 'wp_book' ), $value ); ?>"
-						id="<?php printf( esc_attr( '%s', 'wp_book' ), $key ); ?>"
-						name="<?php printf( esc_attr( '%s', 'wp_book' ), $key ); ?>"
+						type="<?php printf( esc_attr__( '%s', 'wp_book' ), $value ); ?>"
+						id="<?php printf( esc_attr__( '%s', 'wp_book' ), $key ); ?>"
+						name="<?php printf( esc_attr__( '%s', 'wp_book' ), $key ); ?>"
 						value="<?php echo $values[ $key ] ?? ''; ?>"
 					/>
 				</p>
@@ -396,5 +396,110 @@ class WP_Book_Admin {
 			echo "<li>$item</li>";
 		}
 		_e( '</ul>', 'wp_book' );
+	}
+
+	/**
+	 * Creates Admin Page
+	 *
+	 * Creates WP Book Admin Menu and Sub-Menu Page
+	 * and adds a hook for settings registration
+	 *
+	 * @return void
+	 * @since  1.0.0
+	 */
+	public function wp_book_add_admin_settings() {
+		add_menu_page(
+			__( 'WP Book Menu', 'wp_book' ),
+			__( 'WP Book Menu', 'wp_book' ),
+			'manage_options',
+			'wp-book-admin-settings',
+			array( $this, 'wp_book_settings_page' ),
+		);
+
+		add_submenu_page(
+			'wp-book-admin-settings',
+			'Books Settings',
+			'Books Settings',
+			'manage_options',
+			'book-settings',
+			array( $this, 'wp_book_settings_page' ),
+		);
+
+		add_action( 'admin_init', array( $this, 'wp_book_register_settings' ) );
+	}
+
+	/**
+	 * Calls settings form page
+	 *
+	 * @return void
+	 */
+	public function wp_book_settings_page() {
+		require_once plugin_dir_path( __FILE__ ) . '/partials/wp-book-admin-display.php';
+	}
+
+	/**
+	 * Registers settings section and fields
+	 *
+	 * Fields - Currency and Posts per page
+	 *
+	 * @return void
+	 */
+	public function wp_book_register_settings() {
+		register_setting( 'wp-book-admin-settings-group', 'wp_book_currency' );
+		register_setting( 'wp-book-admin-settings-group', 'wp_book_posts_per_page' );
+
+		add_settings_section(
+			'wp-book-settings-section',
+			'Custom Settings',
+			function() {
+				echo 'Change your book settings here';
+			},
+			'wp-book-admin-settings',
+		);
+
+		add_settings_field(
+			'wp_book_currency',
+			'Currency',
+			array( $this, 'currency_input_field' ),
+			'wp-book-admin-settings',
+			'wp-book-settings-section',
+		);
+
+		add_settings_field(
+			'wp_book_posts_per_page',
+			'Post per page to display',
+			array( $this, 'post_per_page_field' ),
+			'wp-book-admin-settings',
+			'wp-book-settings-section',
+		);
+	}
+
+	/**
+	 * Currency input field renderer
+	 *
+	 * @return void
+	 */
+	public function currency_input_field() {
+		$currency = esc_attr( get_option( 'wp_book_currency' ) );
+		ob_start();
+		?>
+		<select name="<?php esc_attr_e( 'wp_book_currency', 'wp_book' ); ?>" id="currency">
+			<option value="$" <?php echo ( '$' === $currency ) ? 'selected' : ''; ?> >Dollar</option>
+			<option value="₹" <?php echo ( '₹' === $currency ) ? 'selected' : ''; ?> >Rupee</option>
+			<option value="Y" <?php echo ( 'Y' === $currency ) ? 'selected' : ''; ?> >Yen</option>
+		</select>
+		<?php
+		echo ob_get_clean();
+	}
+
+	/**
+	 * Post per page input field renderer
+	 *
+	 * @return void
+	 */
+	public function post_per_page_field() {
+		$post_per_page = esc_attr( get_option( 'wp_book_posts_per_page' ) );
+		$attr          = esc_attr__( 'wp_book_posts_per_page', 'wp_book' );
+		echo '<input type="number" name="' . $attr . '" max="10" value="' . $post_per_page . '" />';
 	}
 }
