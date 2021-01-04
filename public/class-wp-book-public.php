@@ -112,38 +112,82 @@ class WP_Book_Public {
 	/**
 	 * Shortcode callback
 	 *
+	 * This is shortcode accepts anyone of the attributes mentioned -
+	 * id, author, year, category, tag, publisher
+	 *
 	 * @param   [mixed] $atts Holds the attributes of the shortcode.
 	 * @return  mixed
 	 */
 	public function wp_book_shortcode_handler( $atts ) {
+		require_once dirname( dirname( __FILE__ ) ) . '/includes/class-wp-book-meta.php';
+
+		$book_meta    = new WP_Book_Meta();
 		$default_atts = array(
-			'id'          => '',
-			'author_name' => '',
-			'year'        => '',
-			'category'    => '',
-			'tag'         => '',
-			'publisher'   => '',
+			'id'        => '',
+			'author'    => '',
+			'year'      => '',
+			'category'  => '',
+			'tag'       => '',
+			'publisher' => '',
 		);
 
 		$atts = shortcode_atts( $default_atts, $atts );
 		$args = array_filter( $atts );
 
-		$val = $this->get_data( $args );
-		var_dump( $val );
-		return $args['id'];
-	}
+		if ( ! count( $args ) ) {
+			return esc_html__( 'No results found!!', 'wp_book' );
+		}
 
-	/**
-	 * Fetch data from the WP Book Meta
-	 *
-	 * @param   [array] $args Attributes array from shortcode handler.
-	 * @return  mixed
-	 */
-	public function get_data( $args ) {
-		require_once dirname( dirname( __FILE__ ) ) . '/includes/class-wp-book-meta.php';
+		if ( isset( $args['id'] ) ) {
+			$post = get_post( $args['id'] );
 
-		$book_meta = new WP_Book_Meta();
+			if ( is_null( $post ) ) {
+				return esc_html__( 'No results found!!', 'wp_book' );
+			}
 
-		return $book_meta->get_book_meta( $args['id'] );
+			$post_title = $post->post_title;
+			$post_price = $book_meta->get_book_meta( $post->ID, 'price', true );
+
+			$html = <<<HTML
+				<h4>{$post_title}</h4>
+				Price : <em>{$post_price}</em>
+			HTML;
+
+			return $html;
+		}
+
+		$args_key = array_keys( $args );
+
+		global $wpdb;
+		$dbquery = $wpdb->prepare(
+			"SELECT $wpdb->posts.ID, $wpdb->posts.post_title, $wpdb->bookmeta.meta_key, $wpdb->bookmeta.meta_value
+			FROM $wpdb->posts, $wpdb->bookmeta
+			WHERE $wpdb->posts.ID = $wpdb->bookmeta.book_id
+			AND $wpdb->bookmeta.meta_key = %s",
+			$args_key[0]
+		);
+
+		$res  = $wpdb->get_results( $dbquery, OBJECT );
+		$html = '';
+
+		foreach ( $res as $post ) {
+			if ( $post->meta_value === $args[ $args_key[0] ] ) {
+
+				$post_title = $post->post_title;
+				$post_price = $book_meta->get_book_meta( $post->ID, 'price', true );
+
+				$html .= <<<HTML
+					<h4>{$post_title}</h4>
+					Price : <em>{$post_price}</em>
+				HTML;
+			}
+		}
+
+		if ( empty( $html ) ) {
+			return esc_html__( 'No results found!!', 'wp_book' );
+		}
+
+		return $html;
 	}
 }
+
