@@ -113,7 +113,7 @@ class WP_Book_Public {
 	 * Shortcode callback
 	 *
 	 * This is shortcode accepts anyone of the attributes mentioned -
-	 * id, author, year, category, tag, publisher
+	 * id, author, year, publisher
 	 *
 	 * @param   [mixed] $atts Holds the attributes of the shortcode.
 	 * @return  mixed
@@ -188,6 +188,17 @@ class WP_Book_Public {
 		}
 
 		return $html;
+	}
+
+	/**
+	 * Register Custom Book Category Widget
+	 *
+	 * @return void
+	 */
+	public function wp_book_register_custom_widget() {
+		require_once dirname( __FILE__ ) . '/class-wp-book-category-widget.php';
+
+		register_widget( 'WP_Book_Category_Widget' );
 	}
 }
 
