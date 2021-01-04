@@ -115,7 +115,7 @@ class WP_Book_Public {
 	 * This is shortcode accepts anyone of the attributes mentioned -
 	 * id, author, year, publisher
 	 *
-	 * @param   [mixed] $atts Holds the attributes of the shortcode.
+	 * @param   mixed $atts Holds the attributes of the shortcode.
 	 * @return  mixed
 	 */
 	public function wp_book_shortcode_handler( $atts ) {

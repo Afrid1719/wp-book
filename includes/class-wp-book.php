@@ -122,6 +122,9 @@ class WP_Book {
 		 */
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'public/class-wp-book-public.php';
 
+		/**
+		 * The class responsible for defining all CRUD actions for the book meta data.
+		 */
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-wp-book-meta.php';
 
 		$this->loader = new WP_Book_Loader();

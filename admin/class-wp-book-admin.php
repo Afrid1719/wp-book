@@ -123,24 +123,24 @@ class WP_Book_Admin {
 		$labels = array(
 			'name'               => __( 'WP Books', 'wp-book' ),
 			'singular_name'      => __( 'WP Book', 'wp-book' ),
-			'add_new'            => _x( 'Add New', 'wp_book', 'wp_book' ),
-			'add_new_item'       => __( 'Add New WP Book', 'wp_book' ),
-			'edit_item'          => __( 'Edit WP Book', 'wp_book' ),
-			'new_item'           => __( 'New WP Book', 'wp_book' ),
-			'view_item'          => __( 'View WP Book', 'wp_book' ),
-			'view_items'         => __( 'View WP Books', 'wp_book' ),
-			'search_items'       => __( 'Search WP Books', 'wp_book' ),
-			'not_found'          => __( 'No WP Books found', 'wp_book' ),
-			'not_found_in_trash' => __( 'No WP Books found in trash', 'wp_book' ),
-			'all_items'          => __( 'All WP Books', 'wp_book' ),
-			'archives'           => __( 'WP Books Archives', 'wp_book' ),
-			'attributes'         => __( 'WP Books Attributes', 'wp_book' ),
+			'add_new'            => __( 'Add New', 'wp-book' ),
+			'add_new_item'       => __( 'Add New WP Book', 'wp-book' ),
+			'edit_item'          => __( 'Edit WP Book', 'wp-book' ),
+			'new_item'           => __( 'New WP Book', 'wp-book' ),
+			'view_item'          => __( 'View WP Book', 'wp-book' ),
+			'view_items'         => __( 'View WP Books', 'wp-book' ),
+			'search_items'       => __( 'Search WP Books', 'wp-book' ),
+			'not_found'          => __( 'No WP Books found', 'wp-book' ),
+			'not_found_in_trash' => __( 'No WP Books found in trash', 'wp-book' ),
+			'all_items'          => __( 'All WP Books', 'wp-book' ),
+			'archives'           => __( 'WP Books Archives', 'wp-book' ),
+			'attributes'         => __( 'WP Books Attributes', 'wp-book' ),
 		);
 
 		$args = array(
 			'labels'              => $labels,
 			'public'              => true,
-			'description'         => __( 'This is a custom WP Book post type', 'wp_book' ),
+			'description'         => __( 'This is a custom WP Book post type', 'wp-book' ),
 			'hierarchical'        => false,
 			'exclude_from_search' => false,
 			'publicly_queryable'  => true,
@@ -148,7 +148,7 @@ class WP_Book_Admin {
 			'show_in_menu'        => true,
 			'show_in_nav_menus'   => false,
 			'capability_type'     => 'post',
-			'has_archive'         => __( 'cpt-wp-books', 'wp_book' ),
+			'has_archive'         => __( 'cpt-wp-books', 'wp-book' ),
 			'taxonomies'          => array( 'book-category', 'book-tag' ),
 			'rewrite'             => array( 'slug' => 'cpt-wp-book' ),
 			'query_var'           => 'cpt_wp_book',
@@ -165,20 +165,20 @@ class WP_Book_Admin {
 	 */
 	public function register_book_category_taxonomy() {
 		$labels = array(
-			'name'              => _x( 'Book Categories', 'taxonomy general name', 'wp_book' ),
-			'singular_name'     => _x( 'Book Category', 'taxonomy singular name', 'wp_book' ),
-			'search_items'      => __( 'Search Book Categories', 'wp_book' ),
-			'all_items'         => __( 'All Book Categories', 'wp_book' ),
-			'parent_item'       => __( 'Parent Book Category', 'wp_book' ),
-			'parent_item_colon' => __( 'Parent Book Category:', 'wp_book' ),
-			'edit_item'         => __( 'Edit Book Category', 'wp_book' ),
-			'view_item'         => __( 'View Book Category', 'wp_book' ),
-			'update_item'       => __( 'Update Book Category', 'wp_book' ),
-			'add_new_item'      => __( 'Add New Book Category', 'wp_book' ),
-			'new_item_name'     => __( 'New Book Category', 'wp_book' ),
-			'menu_name'         => __( 'Book Categories', 'wp_book' ),
-			'not_found'         => __( 'No book categories found', 'wp_book' ),
-			'no_terms'          => __( 'No book categories', 'wp_book' ),
+			'name'              => _x( 'Book Categories', 'taxonomy general name', 'wp-book' ),
+			'singular_name'     => _x( 'Book Category', 'taxonomy singular name', 'wp-book' ),
+			'search_items'      => __( 'Search Book Categories', 'wp-book' ),
+			'all_items'         => __( 'All Book Categories', 'wp-book' ),
+			'parent_item'       => __( 'Parent Book Category', 'wp-book' ),
+			'parent_item_colon' => __( 'Parent Book Category:', 'wp-book' ),
+			'edit_item'         => __( 'Edit Book Category', 'wp-book' ),
+			'view_item'         => __( 'View Book Category', 'wp-book' ),
+			'update_item'       => __( 'Update Book Category', 'wp-book' ),
+			'add_new_item'      => __( 'Add New Book Category', 'wp-book' ),
+			'new_item_name'     => __( 'New Book Category', 'wp-book' ),
+			'menu_name'         => __( 'Book Categories', 'wp-book' ),
+			'not_found'         => __( 'No book categories found', 'wp-book' ),
+			'no_terms'          => __( 'No book categories', 'wp-book' ),
 		);
 		$args   = array(
 			'hierarchical'      => true,
@@ -199,20 +199,20 @@ class WP_Book_Admin {
 	 */
 	public function register_book_tag_taxonomy() {
 		$labels = array(
-			'name'                       => _x( 'Book Tags', 'taxonomy general name', 'wp_book' ),
-			'singular_name'              => _x( 'Book Tag', 'taxonomy singular name', 'wp_book' ),
-			'search_items'               => __( 'Search Book Tags', 'wp_book' ),
-			'popular_items'              => __( 'Book Tags', 'wp_book' ),
-			'all_items'                  => __( 'All Book Tags', 'wp_book' ),
-			'edit_item'                  => __( 'Edit Book Tag', 'wp_book' ),
-			'view_item'                  => __( 'View Book Tag', 'wp_book' ),
-			'update_item'                => __( 'Update Book Tag', 'wp_book' ),
-			'add_new_item'               => __( 'Add New Book Tag', 'wp_book' ),
-			'new_item_name'              => __( 'New Book Tag', 'wp_book' ),
-			'separate_items_with_commas' => __( 'Separate book tags with commas', 'wp_book' ),
-			'menu_name'                  => __( 'Book Tags', 'wp_book' ),
-			'not_found'                  => __( 'No book tags found', 'wp_book' ),
-			'no_terms'                   => __( 'No book tags', 'wp_book' ),
+			'name'                       => _x( 'Book Tags', 'taxonomy general name', 'wp-book' ),
+			'singular_name'              => _x( 'Book Tag', 'taxonomy singular name', 'wp-book' ),
+			'search_items'               => __( 'Search Book Tags', 'wp-book' ),
+			'popular_items'              => __( 'Book Tags', 'wp-book' ),
+			'all_items'                  => __( 'All Book Tags', 'wp-book' ),
+			'edit_item'                  => __( 'Edit Book Tag', 'wp-book' ),
+			'view_item'                  => __( 'View Book Tag', 'wp-book' ),
+			'update_item'                => __( 'Update Book Tag', 'wp-book' ),
+			'add_new_item'               => __( 'Add New Book Tag', 'wp-book' ),
+			'new_item_name'              => __( 'New Book Tag', 'wp-book' ),
+			'separate_items_with_commas' => __( 'Separate book tags with commas', 'wp-book' ),
+			'menu_name'                  => __( 'Book Tags', 'wp-book' ),
+			'not_found'                  => __( 'No book tags found', 'wp-book' ),
+			'no_terms'                   => __( 'No book tags', 'wp-book' ),
 		);
 		$args   = array(
 			'hierarchical'      => false,
@@ -253,7 +253,7 @@ class WP_Book_Admin {
 	/**
 	 * HTML renderer of the custom meta box
 	 *
-	 * @param    [post_type] $post
+	 * @param    post_type $post
 	 * @return   void
 	 */
 	public function wb_meta_box_renderer( $post ) {
@@ -285,16 +285,16 @@ class WP_Book_Admin {
 				?>
 
 					<label
-						for="<?php esc_attr_e( 'wp_book_year', 'wp_book' ); ?>"
+						for="<?php esc_attr_e( 'wp_book_year', 'wp-book' ); ?>"
 					>
-						<?php printf( __( '%s', 'wp_book' ), $key ); ?>
+						<?php printf( __( '%s', 'wp-book' ), $key ); ?>
 					</label>
 					<br/>
 					<input
-						type="<?php printf( esc_attr__( '%s', 'wp_book' ), $value ); ?>"
-						id="<?php printf( esc_attr__( '%s', 'wp_book' ), $key ); ?>"
-						name="<?php printf( esc_attr__( '%s', 'wp_book' ), $key ); ?>"
-						placeholder="<?php esc_attr_e( 'YYYY', 'wp_book' ); ?>"
+						type="<?php printf( esc_attr__( '%s', 'wp-book' ), $value ); ?>"
+						id="<?php printf( esc_attr__( '%s', 'wp-book' ), $key ); ?>"
+						name="<?php printf( esc_attr__( '%s', 'wp-book' ), $key ); ?>"
+						placeholder="<?php esc_attr( 'YYYY' ); ?>"
 						min="1900"
 						max="2020"
 						value="<?php echo $values[ $key ] ?? ''; ?>"
@@ -305,15 +305,15 @@ class WP_Book_Admin {
 				?>
 				<p>
 					<label
-						for="<?php printf( esc_attr__( '%s', 'wp_book' ), $key ); ?>"
+						for="<?php printf( esc_attr__( '%s', 'wp-book' ), $key ); ?>"
 					>
-						<?php printf( __( '%s', 'wp_book' ), $key ); ?>
+						<?php printf( __( '%s', 'wp-book' ), $key ); ?>
 					</label>
 					<br/>
 					<input
-						type="<?php printf( esc_attr__( '%s', 'wp_book' ), $value ); ?>"
-						id="<?php printf( esc_attr__( '%s', 'wp_book' ), $key ); ?>"
-						name="<?php printf( esc_attr__( '%s', 'wp_book' ), $key ); ?>"
+						type="<?php printf( esc_attr__( '%s', 'wp-book' ), $value ); ?>"
+						id="<?php printf( esc_attr__( '%s', 'wp-book' ), $key ); ?>"
+						name="<?php printf( esc_attr__( '%s', 'wp-book' ), $key ); ?>"
 						value="<?php echo $values[ $key ] ?? ''; ?>"
 					/>
 				</p>
@@ -325,14 +325,14 @@ class WP_Book_Admin {
 	/**
 	 * Saves Book Meta Information
 	 *
-	 * @param  [int] $post_id
+	 * @param  int $post_id
 	 * @return mixed
 	 */
 	public function save_book_meta( $post_id ) {
 		if ( ! isset( $_POST['wp_bookmeta_nonce'] ) || ! wp_verify_nonce( $_POST['wp_bookmeta_nonce'], basename( __FILE__ ) ) ) {
 			return $post_id;
 		}
-		
+
 		if ( 'cpt_wp_book' !== get_post( $post_id )->post_type ) {
 			return;
 		}
@@ -405,8 +405,8 @@ class WP_Book_Admin {
 	 */
 	public function wp_book_add_admin_settings() {
 		add_menu_page(
-			__( 'WP Book Menu', 'wp_book' ),
-			__( 'WP Book Menu', 'wp_book' ),
+			__( 'WP Book Menu', 'wp-book' ),
+			__( 'WP Book Menu', 'wp-book' ),
 			'manage_options',
 			'wp-book-admin-settings',
 			array( $this, 'wp_book_settings_page' ),
@@ -414,8 +414,8 @@ class WP_Book_Admin {
 
 		add_submenu_page(
 			'wp-book-admin-settings',
-			'Books Settings',
-			'Books Settings',
+			__( 'Books Settings', 'wp-book' ),
+			__( 'Books Settings', 'wp-book' ),
 			'manage_options',
 			'book-settings',
 			array( $this, 'wp_book_settings_page' ),
@@ -446,16 +446,16 @@ class WP_Book_Admin {
 
 		add_settings_section(
 			'wp-book-settings-section',
-			'Custom Settings',
+			__( 'Custom Settings', 'wp-book' ),
 			function() {
-				echo 'Change your book settings here';
+				esc_html_e( 'Change your book settings here', 'wp-book' );
 			},
 			'wp-book-admin-settings',
 		);
 
 		add_settings_field(
 			'wp_book_currency',
-			'Currency',
+			__( 'Currency', 'wp-book' ),
 			array( $this, 'currency_input_field' ),
 			'wp-book-admin-settings',
 			'wp-book-settings-section',
@@ -463,7 +463,7 @@ class WP_Book_Admin {
 
 		add_settings_field(
 			'wp_book_posts_per_page',
-			'Post per page to display',
+			__( 'Post per page to display', 'wp-book' ),
 			array( $this, 'post_per_page_field' ),
 			'wp-book-admin-settings',
 			'wp-book-settings-section',
@@ -479,7 +479,7 @@ class WP_Book_Admin {
 		$currency = esc_attr( get_option( 'wp_book_currency' ) );
 		ob_start();
 		?>
-		<select name="<?php esc_attr_e( 'wp_book_currency', 'wp_book' ); ?>" id="currency">
+		<select name="<?php esc_attr_e( 'wp_book_currency', 'wp-book' ); ?>" id="currency">
 			<option value="$" <?php echo ( '$' === $currency ) ? 'selected' : ''; ?> >Dollar</option>
 			<option value="₹" <?php echo ( '₹' === $currency ) ? 'selected' : ''; ?> >Rupee</option>
 			<option value="Y" <?php echo ( 'Y' === $currency ) ? 'selected' : ''; ?> >Yen</option>
@@ -495,7 +495,7 @@ class WP_Book_Admin {
 	 */
 	public function post_per_page_field() {
 		$post_per_page = esc_attr( get_option( 'wp_book_posts_per_page' ) );
-		$attr          = esc_attr__( 'wp_book_posts_per_page', 'wp_book' );
+		$attr          = esc_attr__( 'wp_book_posts_per_page', 'wp-book' );
 		echo '<input type="number" name="' . $attr . '" max="10" value="' . $post_per_page . '" />';
 	}
 }
