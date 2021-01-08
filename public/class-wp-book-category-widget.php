@@ -60,12 +60,14 @@ class WP_Book_Category_Widget extends WP_Widget {
 			);
 		}
 
-		$posts = query_posts(
+		$posts = new WP_Query(
 			array(
 				'post_type' => 'cpt_wp_book',
 				'tax_query' => $args,
 			)
 		);
+
+		$posts = $posts->get_posts();
 		?>
 			<?php echo $before_widget; ?>
 			<?php
