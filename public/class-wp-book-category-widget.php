@@ -19,7 +19,7 @@ class WP_Book_Category_Widget extends WP_Widget {
 			'classname'   => 'wp-book-category-widget',
 			'description' => __( 'Custom widget to display the books of selected category.', 'wp_book' ),
 		);
-		parent::__construct( 'wp_book_category', __( 'Book Category', 'wp_book' ), $widget_options );
+		parent::__construct( 'wp_book_category', __( 'WP Books', 'wp_book' ), $widget_options );
 
 	}
 
@@ -34,13 +34,38 @@ class WP_Book_Category_Widget extends WP_Widget {
 		extract( $args );
 
 		$title    = apply_filters( 'widget_title', $instance['title'] );
-		$taxonomy = $instance['taxonomy'];
+		$category = isset( $instance['category'] ) ? $instance['category'] : '';
 
-		$args = array(
-			'taxonomy' => $taxonomy,
+		if ( 'Select a category' === $category || '' === $category ) {
+			/**
+			 * Without "field" key the query would return all the
+			 * terms when provided with an arbitary value.
+			 *
+			 * This fetches all the posts associated with the given
+			 * taxonomy regardless of any term
+			 */
+			$args = array(
+				array(
+					'taxonomy' => 'book-category',
+					'terms'    => 'abc',
+				),
+			);
+		} else {
+			$args = array(
+				array(
+					'taxonomy' => 'book-category',
+					'field'    => 'slug',
+					'terms'    => $category,
+				),
+			);
+		}
+
+		$posts = query_posts(
+			array(
+				'post_type' => 'cpt_wp_book',
+				'tax_query' => $args,
+			)
 		);
-
-		$categories = get_categories( $args );
 		?>
 			<?php echo $before_widget; ?>
 			<?php
@@ -50,10 +75,10 @@ class WP_Book_Category_Widget extends WP_Widget {
 			?>
 			<ol>
 			<?php
-			foreach ( $categories as $category ) :
+			foreach ( $posts as $post ) :
 				?>
 				 
-				<li><a href="<?php echo get_term_link( $category->slug, $taxonomy ); ?>" title="<?php sprintf( __( 'View all posts in %s' ), $category->name ); ?>"><?php echo $category->name; ?></a></li>
+				<li><a href="<?php echo get_permalink( $post ); ?>" title="<?php sprintf( __( 'View all posts in %s' ), $post->post_title ); ?>"><?php echo $post->post_title; ?></a></li>
 			<?php endforeach; ?>
 			</ol>
 			<?php $after_widget; ?>
@@ -67,7 +92,7 @@ class WP_Book_Category_Widget extends WP_Widget {
 	 */
 	public function form( $instance ) {
 		$title    = isset( $instance['title'] ) ? esc_attr( $instance['title'] ) : esc_attr( 'Book Categories' );
-		$taxonomy = isset( $intance['taxonomy'] ) ? esc_attr( $instance['taxonomy'] ) : esc_attr( 'book-category' );
+		$category = isset( $instance['category'] ) ? esc_attr( $instance['category'] ) : '';
 
 		?>
 		<p>
@@ -75,12 +100,18 @@ class WP_Book_Category_Widget extends WP_Widget {
 		  <input class="widefat" id="<?php echo $this->get_field_id( 'title' ); ?>" name="<?php echo $this->get_field_name( 'title' ); ?>" type="text" value="<?php echo $title; ?>" />
 		</p>
 		<p>
-			<label for="<?php echo $this->get_field_id( 'taxonomy' ); ?>"><?php _e( 'Choose the category to display' ); ?></label>
-			<select name="<?php echo $this->get_field_name( 'taxonomy' ); ?>" id="<?php echo $this->get_field_id( 'taxonomy' ); ?>" class="widefat"/>
+			<label for="<?php echo $this->get_field_id( 'category' ); ?>"><?php _e( 'Choose the category to display' ); ?></label>
+			<select name="<?php echo $this->get_field_name( 'category' ); ?>" id="<?php echo $this->get_field_id( 'category' ); ?>" class="widefat"/>
+				<option>Select a category</option>
 				<?php
-				$taxonomies = get_taxonomies( array( 'name' => 'book-category' ), 'names' );
-				foreach ( $taxonomies as $option ) {
-					echo '<option id="' . $option . '"', $taxonomy == $option ? ' selected="selected"' : '', '>', $option, '</option>';
+				$terms = get_terms(
+					array(
+						'taxonomy' => 'book-category',
+					)
+				);
+
+				foreach ( $terms as $option ) {
+					echo '<option id="' . $option->name . '" value="' . $option->slug . '"', $category === $option->slug ? ' selected="selected"' : '', '>', $option->name, '</option>';
 				}
 				?>
 			</select>
@@ -99,7 +130,7 @@ class WP_Book_Category_Widget extends WP_Widget {
 	public function update( $new_instance, $old_instance ) {
 		$instance             = $old_instance;
 		$instance['title']    = strip_tags( $new_instance['title'] );
-		$instance['taxonomy'] = $new_instance['taxonomy'];
+		$instance['category'] = $new_instance['category'];
 		return $instance;
 	}
 }
